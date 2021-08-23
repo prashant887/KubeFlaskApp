@@ -31,9 +31,21 @@ spec:
       labels:
         app: hello-python
     spec:
+      volumes:
+        - name: log-path
+          #hostPath:
+          #  path: /Users/pl465j/Documents/KubeFlaskApp/log
+          persistentVolumeClaim:
+            claimName: task-pv-claim
       containers:
       - name: hello-python
         image: hello-python:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 6050
+        env:
+        - name: ENV
+          value: Testing
+        volumeMounts:
+          - name: log-path
+            mountPath: /log/
