@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-python-service
+  namespace: demo-namespace
+spec:
+  selector:
+    app: hello-python
+  ports:
+    - port: 6000
+      protocol: TCP
+      targetPort: 6050
+      nodePort: 31515
+  type: LoadBalancer
+        #NodePort
+        #LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-python
+  namespace: demo-namespace
+spec:
+  selector:
+    matchLabels:
+      app: hello-python
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello-python
+    spec:
+      volumes:
+        - name: log-path
+          #hostPath:
+          #  path: /Users/pl465j/Documents/KubeFlaskApp/log
+          persistentVolumeClaim:
+            claimName: task-pv-claim
+      containers:
+      - name: hello-python
+        image: hello-python:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 6050
+        env:
+        - name: ENV
+          value: Testing
+        volumeMounts:
+          - name: log-path
+            mountPath: /log/
