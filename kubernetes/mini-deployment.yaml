@@ -10,8 +10,8 @@ spec:
     - port: 6000
       protocol: TCP
       targetPort: 6050
-      nodePort: 31515
-  type: LoadBalancer
+      #nodePort: 31515
+  type: ClusterIP
         #NodePort
         #LoadBalancer
 
@@ -31,12 +31,12 @@ spec:
       labels:
         app: hello-python
     spec:
-      volumes:
-        - name: log-path
+     # volumes:
+     #   - name: log-path
           #hostPath:
           #  path: /Users/pl465j/Documents/KubeFlaskApp/log
-          persistentVolumeClaim:
-            claimName: task-pv-claim
+     #     persistentVolumeClaim:
+     #       claimName: task-pv-claim
       containers:
       - name: hello-python
         image: hello-python:latest
@@ -46,6 +46,6 @@ spec:
         env:
         - name: ENV
           value: Testing
-        volumeMounts:
-          - name: log-path
-            mountPath: /log/
+        #volumeMounts:
+        #  - name: log-path
+        #    mountPath: /log/
